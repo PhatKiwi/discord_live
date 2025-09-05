@@ -2,7 +2,7 @@
   Server {@server.id}
   <:subtitle>This is a server record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/servers/#{@server}/show/edit"} phx-click={JS.push_focus()}>
+    <.link :if={@is_owner} patch={~p"/servers/#{@server}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit server</.button>
     </.link>
   </:actions>
@@ -15,7 +15,12 @@
 
 <.back navigate={~p"/servers"}>Back to servers</.back>
 
-<.modal :if={@live_action == :edit} id="server-modal" show on_cancel={JS.patch(~p"/servers/#{@server}")}>
+<.modal
+  :if={@live_action == :edit and @is_owner}
+  id="server-modal"
+  show
+  on_cancel={JS.patch(~p"/servers/#{@server}")}
+>
   <.live_component
     module={DiscordLiveWeb.ServerLive.FormComponent}
     id={@server.id}

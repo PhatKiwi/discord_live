@@ -10,10 +10,15 @@ defmodule DiscordLiveWeb.ServerLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    server = Servers.get_server!(id)
+    current_user = socket.assigns.current_user
+    is_owner = current_user && current_user.id == server.owner_id
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:server, Servers.get_server!(id))}
+     |> assign(:server, server)
+     |> assign(:is_owner, is_owner)}
   end
 
   defp page_title(:show), do: "Show Server"
