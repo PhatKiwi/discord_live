@@ -65,7 +65,8 @@ defmodule DiscordLiveWeb.ServerLive.FormComponent do
   end
 
   defp save_server(socket, :new, server_params) do
-    case Servers.create_server(server_params) do
+    server_params_with_owner = Map.put(server_params, "owner_id", socket.assigns.current_user.id)
+    case Servers.create_server(server_params_with_owner) do
       {:ok, server} ->
         notify_parent({:saved, server})
 

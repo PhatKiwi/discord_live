@@ -14,7 +14,7 @@ defmodule DiscordLive.Servers.Server do
   @doc false
   def changeset(server, attrs) do
     server
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name, :description, :owner_id])
+    |> validate_required([:name, :description, :owner_id])
   end
 end

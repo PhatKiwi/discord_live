@@ -21,6 +21,17 @@ defmodule DiscordLiveWeb.ServerLive.Show do
      |> assign(:is_owner, is_owner)}
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    server = Servers.get_server!(id)
+    {:ok, _} = Servers.delete_server(server)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Server deleted successfully")
+     |> push_navigate(to: ~p"/servers")}
+  end
+
   defp page_title(:show), do: "Show Server"
   defp page_title(:edit), do: "Edit Server"
 end

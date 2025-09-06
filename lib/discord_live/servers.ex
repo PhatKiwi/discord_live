@@ -19,6 +19,7 @@ defmodule DiscordLive.Servers do
   """
   def list_servers do
     Repo.all(Server)
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -35,7 +36,10 @@ defmodule DiscordLive.Servers do
       ** (Ecto.NoResultsError)
 
   """
-  def get_server!(id), do: Repo.get!(Server, id)
+  def get_server!(id) do
+    Repo.get!(Server, id)
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a server.
@@ -50,9 +54,14 @@ defmodule DiscordLive.Servers do
 
   """
   def create_server(attrs \\ %{}) do
-    %Server{}
-    |> Server.changeset(attrs)
-    |> Repo.insert()
+    case %Server{}
+         |> Server.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, server} ->
+        {:ok, Repo.preload(server, :user)}
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -68,9 +77,14 @@ defmodule DiscordLive.Servers do
 
   """
   def update_server(%Server{} = server, attrs) do
-    server
-    |> Server.changeset(attrs)
-    |> Repo.update()
+    case server
+         |> Server.changeset(attrs)
+         |> Repo.update() do
+      {:ok, server} ->
+        {:ok, Repo.preload(server, :user)}
+      error ->
+        error
+    end
   end
 
   @doc """

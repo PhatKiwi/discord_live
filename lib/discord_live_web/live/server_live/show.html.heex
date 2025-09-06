@@ -5,6 +5,13 @@
     <.link :if={@is_owner} patch={~p"/servers/#{@server}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit server</.button>
     </.link>
+    <.link
+      :if={@is_owner}
+      phx-click={JS.push("delete", value: %{id: @server.id})}
+      data-confirm="Are you sure?"
+    >
+      <.button>Delete</.button>
+    </.link>
   </:actions>
 </.header>
 
